@@ -1,5 +1,7 @@
 import asyncio
+import logging
 import os
+from pprint import pprint
 from time import sleep
 
 import prometheus_client
@@ -16,7 +18,9 @@ load_dotenv()  # take environment variables from .env.
 USERNAME = os.getenv("FLICK_USERNAME")
 PASSWORD = os.getenv("FLICK_PASSWORD")
 
-print(f"Starting up with username {USERNAME}")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.info(f"Starting up with username {USERNAME}")
 
 
 async def get_flick_pricing():
@@ -32,16 +36,20 @@ def set_power_price():
     answer = asyncio.run(get_flick_pricing())
     price = answer.price / 100
     wait_time = answer.end_at - answer.now
-    print(f"Current price ${price}")
-    print(f"Waititing for {wait_time} to fetch new price")
+    logger.info(f"Current price ${price}")
+    logger.info(f"Waititing for {wait_time} ({wait_time.seconds}s) to fetch new price")
 
     SPOT_PRICE.set(price)
-    return wait_time.seconds
+    return wait_time.seconds + 30  # give it a little extra time (Flick is a little slow)
 
 
-if __name__ == '__main__':
+def main():
     # Start up the server to expose the metrics.
     prometheus_client.start_http_server(8000)
     while True:
         wait_time = set_power_price()
         sleep(wait_time)
+
+
+if __name__ == '__main__':
+    main()
