@@ -18,14 +18,12 @@ jobs:
     - name: Log into registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: pull tags
-      run: git pull --tags
-
     - name: pull docker images for cache
       run: docker pull ghcr.io/ollytheninja/flick-exporter:latest
 
     - name: Build and push image
       run: |
+        git pull --tags
         export DATESTAMP=$(date +%s)
         export VERSION=$(git describe --tags)
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$DATESTAMP
