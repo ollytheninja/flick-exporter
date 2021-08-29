@@ -12,8 +12,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag flick-exporter:latest
+    - name: Build Docker image
+      run: |
+        docker pull ghcr.io/ollytheninja/flick-exporter:latest
+        docker build . --file Dockerfile --tag flick-exporter:latest
 
     - name: Log into registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -25,11 +27,10 @@ jobs:
       run: |
         git pull --tags
 
-        git tag
+        git log --oneline
         git show-ref --tags
-        git show-ref --tags -d
-        git describe
         git describe --tags
+        git describe
 
         export DATESTAMP=$(date +%s)
         export VERSION=$(git describe --tags)
