@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: exporter
-        image: gcr.io/ollytheninja/flick-exporter
+        image: ghcr.io/ollytheninja/flick-exporter:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
@@ -44,3 +44,17 @@ spec:
   - port: 8000
     targetPort: 8000
     name: http
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: flick-exporter
+spec:
+  endpoints:
+    - path: /export
+      port: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: flick-exporter
+      app.kubernetes.io/name: flick-exporter
