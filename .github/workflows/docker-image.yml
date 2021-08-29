@@ -17,11 +17,16 @@ jobs:
 
     - name: Log into registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
+    - name: Find Tag
+      id: tagger
+      uses: jimschubert/query-tag-action@v1
+      with:
+        include: 'v*'
+        commit-ish: 'HEAD'
     - name: Push image
       run: |
         export DATESTAMP=$(date +%s)
-        export VERSION=$(git describe --tags)
+        export VERSION=${{steps.tagger.outputs.tag}}
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$DATESTAMP
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$VERSION
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:latest
