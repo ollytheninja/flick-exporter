@@ -15,15 +15,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag flick-exporter:$(date +%s)
+      run: docker build . --file Dockerfile --tag flick-exporter:latest
 
     - name: Log into registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Push image
       run: |
-        docker tag flick-exporter:$(date +%s) ghcr.io/ollytheninja/flick-exporter:$(date +%s)
-        docker tag flick-exporter:$(date +%s) ghcr.io/ollytheninja/flick-exporter:latest
+        VERSION = $(date +%s)
+        docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$VERSION
+        docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:latest
 
-        docker push ghcr.io/ollytheninja/flick-exporter:$(date +%s)
+        docker push ghcr.io/ollytheninja/flick-exporter:$VERSION
         docker push ghcr.io/ollytheninja/flick-exporter:latest

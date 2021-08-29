@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flick-exporter
+  labels:
+    app: flick-exporter
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flick-exporter
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: flick-exporter
+        version: v1
+    spec:
+      containers:
+      - name: exporter
+        image: gcr.io/ollytheninja/flick-exporter
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flick-exporter
+  labels:
+    app: flick-exporter
+    service: flick-exporter
+spec:
+  selector:
+    app: flick-exporter
+  ports:
+  - port: 8000
+    targetPort: 8000
+    name: http
