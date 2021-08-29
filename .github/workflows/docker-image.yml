@@ -20,9 +20,12 @@ jobs:
 
     - name: Push image
       run: |
-        export VERSION=$(date +%s)
+        export DATESTAMP=$(date +%s)
+        export VERSION=$(git describe --tags)
+        docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$DATESTAMP
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$VERSION
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:latest
 
+        docker push ghcr.io/ollytheninja/flick-exporter:$DATESTAMP
         docker push ghcr.io/ollytheninja/flick-exporter:$VERSION
         docker push ghcr.io/ollytheninja/flick-exporter:latest
