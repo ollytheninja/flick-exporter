@@ -21,4 +21,9 @@ jobs:
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Push image
-      run: docker push
+      run: |
+        docker tag flick-exporter:$(date +%s) ghcr.io/ollytheninja/flick-exporter:$(date +%s)
+        docker tag flick-exporter:$(date +%s) ghcr.io/ollytheninja/flick-exporter:latest
+
+        docker push ghcr.io/ollytheninja/flick-exporter:$(date +%s)
+        docker push ghcr.io/ollytheninja/flick-exporter:latest
