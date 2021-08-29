@@ -17,12 +17,17 @@ jobs:
 
     - name: Log into registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: pull tags
+      run: git pull --tags
+
     - name: Find Tag
       id: tagger
       uses: jimschubert/query-tag-action@v1
       with:
         include: 'v*'
         commit-ish: 'HEAD'
+
     - name: Push image
       run: |
         export DATESTAMP=$(date +%s)
