@@ -25,6 +25,8 @@ jobs:
 
     - name: Build and push image
       run: |
+        git fetch
+        git pull --tags
         export DATESTAMP=$(date +%s)
         export VERSION=$(git describe --tags)
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$DATESTAMP
