@@ -71,13 +71,3 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: flick-exporter
       app.kubernetes.io/name: flick-exporter
-#
-#---
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  name: flick-exporter-secrets
-#type: Opaque
-#data:
-#  FLICK_USERNAME:
-#  FLICK_PASSWORD:
