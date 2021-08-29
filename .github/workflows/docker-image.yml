@@ -22,7 +22,7 @@ jobs:
 
     - name: Push image
       run: |
-        VERSION = $(date +%s)
+        export VERSION=$(date +%s)
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$VERSION
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:latest
 
