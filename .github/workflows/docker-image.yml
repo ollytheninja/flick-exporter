@@ -25,9 +25,10 @@ jobs:
 
     - name: Build and push image
       run: |
+        git fetch
         git pull --tags
 
-        git log --oneline
+        git log
         git show-ref --tags
         git describe --tags
         git describe
