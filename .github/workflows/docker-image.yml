@@ -21,17 +21,13 @@ jobs:
     - name: pull tags
       run: git pull --tags
 
-    - name: Find Tag
-      id: tagger
-      uses: jimschubert/query-tag-action@v1
-      with:
-        include: 'v*'
-        commit-ish: 'HEAD'
+    - name: pull docker images for cache
+      run: docker pull ghcr.io/ollytheninja/flick-exporter:latest
 
-    - name: Push image
+    - name: Build and push image
       run: |
         export DATESTAMP=$(date +%s)
-        export VERSION=${{steps.tagger.outputs.tag}}
+        export VERSION=$(git describe --tags)
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$DATESTAMP
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:$VERSION
         docker tag flick-exporter:latest ghcr.io/ollytheninja/flick-exporter:latest
