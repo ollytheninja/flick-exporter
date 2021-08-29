@@ -16,6 +16,8 @@ load_dotenv()  # take environment variables from .env.
 USERNAME = os.getenv("FLICK_USERNAME")
 PASSWORD = os.getenv("FLICK_PASSWORD")
 
+print(f"Starting up with username {USERNAME}")
+
 
 async def get_flick_pricing():
     async with ClientSession() as session:

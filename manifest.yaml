@@ -21,9 +21,20 @@ spec:
       containers:
       - name: exporter
         image: ghcr.io/ollytheninja/flick-exporter:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
+        env:
+        - name: FLICK_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: flick-exporter-secrets
+              key: FLICK_USERNAME
+        - name: FLICK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: flick-exporter-secrets
+              key: FLICK_PASSWORD
       securityContext:
         runAsUser: 1000
         runAsGroup: 3000
