@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import os
-from pprint import pprint
 from time import sleep
 
 import prometheus_client
@@ -11,7 +10,7 @@ from prometheus_client import Gauge
 from pyflick import FlickAPI
 from pyflick.authentication import SimpleFlickAuth
 
-SPOT_PRICE = Gauge('flick_power_spot_price', "Spot price in $/KWh")
+SPOT_PRICE = Gauge('flick_power_spot_price', "Spot price in c/KWh")
 
 load_dotenv()  # take environment variables from .env.
 
@@ -34,9 +33,9 @@ async def get_flick_pricing():
 
 def set_power_price():
     answer = asyncio.run(get_flick_pricing())
-    price = answer.price / 100
+    price = answer.price
     wait_time = answer.end_at - answer.now
-    logger.info(f"Current price ${price}")
+    logger.info(f"Current price {price}c/KWh")
     logger.info(f"Waititing for {wait_time} ({wait_time.seconds}s) to fetch new price")
 
     SPOT_PRICE.set(price)
