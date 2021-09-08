@@ -1,0 +1,6 @@
+prometheus-client
+git+https://github.com/ollytheninja/PyFlick.git
+
+aiohttp
+python-dotenv
+python-dateutil
